@@ -1,53 +1,54 @@
-import { useEffect, useState } from 'react';
-import Alarm from './Alarm';
-import Timer from './Timer';
-import Stopwatch from './Stopwatch';
-import Weather from './Weather';
+// orientation-app.js
 
-export default function OrientationTool() {
-  const [orientation, setOrientation] = useState('portrait');
+const views = {
+  portrait: document.getElementById("alarm"),
+  landscape: document.getElementById("weather"),
+  upsidedown: document.getElementById("timer"),
+  landscapeLeft: document.getElementById("stopwatch")
+};
 
-  useEffect(() => {
-    const handleOrientation = () => {
-      const angle = window.orientation;
-      if (angle === 0 || angle === 180) {
-        setOrientation('portrait');
-      } else {
-        setOrientation('landscape');
-      }
-    };
-
-    handleOrientation(); // Set initial
-    window.addEventListener('orientationchange', handleOrientation);
-
-    return () => {
-      window.removeEventListener('orientationchange', handleOrientation);
-    };
-  }, []);
-
-  const orientationContent = {
-    portrait: (
-      <div className="text-center p-6">
-        <h2 className="text-2xl font-bold mb-4">Portrait Mode</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Timer />
-          <Stopwatch />
-          <Alarm />
-          <Weather />
-        </div>
-      </div>
-    ),
-    landscape: (
-      <div className="text-center p-10">
-        <h2 className="text-3xl font-bold mb-6">Landscape Mode</h2>
-        <p className="text-lg">Rotate your device to portrait to access all features.</p>
-      </div>
-    ),
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100 flex flex-col items-center justify-center transition-all duration-700">
-      {orientationContent[orientation]}
-    </div>
-  );
+function hideAllViews() {
+  Object.values(views).forEach(view => view.style.display = "none");
 }
+
+function showView(name) {
+  hideAllViews();
+  if (views[name]) {
+    views[name].style.display = "block";
+  }
+}
+
+function getOrientation() {
+  const angle = window.orientation || window.screen.orientation?.angle;
+  const orientation = window.screen.orientation?.type;
+  if (typeof angle === 'number') {
+    if (angle === 0) return 'portrait';
+    if (angle === 180) return 'upsidedown';
+    if (angle === 90) return 'landscape';
+    if (angle === -90) return 'landscapeLeft';
+  }
+  // fallback using type
+  if (orientation?.includes('portrait-primary')) return 'portrait';
+  if (orientation?.includes('portrait-secondary')) return 'upsidedown';
+  if (orientation?.includes('landscape-primary')) return 'landscape';
+  if (orientation?.includes('landscape-secondary')) return 'landscapeLeft';
+
+  // default
+  return 'portrait';
+}
+
+function handleOrientationChange() {
+  const orientation = getOrientation();
+  console.log("Detected orientation:", orientation);
+  showView(orientation);
+}
+
+// Initial load
+window.addEventListener("DOMContentLoaded", handleOrientationChange);
+
+// Listen to changes
+window.addEventListener("orientationchange", handleOrientationChange);
+window.addEventListener("resize", handleOrientationChange);
+
+// Touch screen fallback
+window.addEventListener("deviceorientation", handleOrientationChange);
