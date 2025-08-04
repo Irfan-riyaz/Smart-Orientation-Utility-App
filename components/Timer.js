@@ -10,14 +10,12 @@ export default function Timer() {
   const intervalRef = useRef(null);
   const alarmSoundRef = useRef(null);
 
-  // Format time in MM:SS
   const formatTime = (seconds) => {
     const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
     const secs = String(seconds % 60).padStart(2, "0");
     return `${mins}:${secs}`;
   };
 
-  // Orientation checker
   useEffect(() => {
     const checkOrientation = () => {
       const orientation = window.screen.orientation?.angle;
@@ -25,17 +23,15 @@ export default function Timer() {
         setIsLandscapeRight(true);
       } else {
         setIsLandscapeRight(false);
-        setIsRunning(false); // Pause timer if rotated away
+        setIsRunning(false);
       }
     };
 
     checkOrientation();
-
     window.addEventListener("orientationchange", checkOrientation);
     return () => window.removeEventListener("orientationchange", checkOrientation);
   }, []);
 
-  // Timer logic
   useEffect(() => {
     if (isRunning && remainingTime > 0) {
       intervalRef.current = setInterval(() => {
@@ -78,7 +74,7 @@ export default function Timer() {
 
   if (!isLandscapeRight) {
     return (
-      <div style={cardStyle}>
+      <div style={cardStyleWithScroll}>
         <h2 style={cardTitle}>🔄 Rotate Device</h2>
         <p style={{ fontSize: "1.1rem" }}>
           Please rotate your device to <strong>Landscape Right (90°)</strong> to view the timer.
@@ -88,7 +84,7 @@ export default function Timer() {
   }
 
   return (
-    <div style={cardStyle}>
+    <div style={cardStyleWithScroll}>
       <h2 style={cardTitle}>⏱️ Timer</h2>
       <p style={{ fontSize: "1.2rem", marginBottom: "0.5rem" }}>
         📅 {new Date().toDateString()}
@@ -125,7 +121,7 @@ export default function Timer() {
   );
 }
 
-const cardStyle = {
+const cardStyleWithScroll = {
   background: "rgba(255, 255, 255, 0.1)",
   padding: "1.5rem",
   borderRadius: "16px",
@@ -135,6 +131,8 @@ const cardStyle = {
   width: "90%",
   maxWidth: "500px",
   margin: "auto",
+  overflowY: "auto",   // added scrollbar
+  maxHeight: "100vh",  // scroll triggers only when needed
 };
 
 const cardTitle = {
