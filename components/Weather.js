@@ -4,7 +4,7 @@ export default function Weather() {
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
 
-  const apiKey = "YOUR_OPENWEATHERMAP_API_KEY"; // 🔁 Replace with your real API key
+  const apiKey = "4c1d221f8c34bc3ebadff399d2f2966a";
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -20,11 +20,16 @@ export default function Weather() {
         )
           .then((res) => res.json())
           .then((data) => {
+            if (data.cod !== 200) {
+              setError("Unable to retrieve weather information.");
+              return;
+            }
+
             setWeather({
-              temp: Math.round(data.main.temp),
-              description: data.weather[0].description,
-              location: data.name,
-              icon: data.weather[0].icon,
+              temp: Math.round(data.main?.temp || 0),
+              description: data.weather?.[0]?.description || "Unknown",
+              location: data.name || "Unknown",
+              icon: data.weather?.[0]?.icon || "01d",
             });
           })
           .catch(() => setError("Failed to fetch weather data."));
