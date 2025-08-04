@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 
 export default function Timer() {
-  const [duration, setDuration] = useState(0); // in seconds
+  const [duration, setDuration] = useState(0);
   const [inputMinutes, setInputMinutes] = useState("");
   const [remainingTime, setRemainingTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [message, setMessage] = useState("");
+  const [isLandscapeRight, setIsLandscapeRight] = useState(false);
   const intervalRef = useRef(null);
   const alarmSoundRef = useRef(null);
 
@@ -16,6 +17,25 @@ export default function Timer() {
     return `${mins}:${secs}`;
   };
 
+  // Orientation checker
+  useEffect(() => {
+    const checkOrientation = () => {
+      const orientation = window.screen.orientation?.angle;
+      if (orientation === 90) {
+        setIsLandscapeRight(true);
+      } else {
+        setIsLandscapeRight(false);
+        setIsRunning(false); // Pause timer if rotated away
+      }
+    };
+
+    checkOrientation();
+
+    window.addEventListener("orientationchange", checkOrientation);
+    return () => window.removeEventListener("orientationchange", checkOrientation);
+  }, []);
+
+  // Timer logic
   useEffect(() => {
     if (isRunning && remainingTime > 0) {
       intervalRef.current = setInterval(() => {
@@ -55,6 +75,17 @@ export default function Timer() {
     setInputMinutes("");
     setMessage("🔁 Timer Reset");
   };
+
+  if (!isLandscapeRight) {
+    return (
+      <div style={cardStyle}>
+        <h2 style={cardTitle}>🔄 Rotate Device</h2>
+        <p style={{ fontSize: "1.1rem" }}>
+          Please rotate your device to <strong>Landscape Right (90°)</strong> to view the timer.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div style={cardStyle}>
