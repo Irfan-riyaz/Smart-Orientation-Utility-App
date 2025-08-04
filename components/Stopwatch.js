@@ -1,11 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 
 export default function Stopwatch() {
-  const [time, setTime] = useState(0); // milliseconds
+  const [time, setTime] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+  const [orientation, setOrientation] = useState(getOrientation());
   const intervalRef = useRef(null);
   const alarmSoundRef = useRef(null);
   const hasAlerted = useRef(false);
+
+  function getOrientation() {
+    return window.innerWidth > window.innerHeight ? "landscape" : "portrait";
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setOrientation(getOrientation());
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (isRunning) {
@@ -20,8 +33,6 @@ export default function Stopwatch() {
 
   useEffect(() => {
     const seconds = Math.floor(time / 1000);
-
-    // 🔔 Play alarm sound at 10 seconds
     if (seconds === 10 && !hasAlerted.current) {
       alarmSoundRef.current?.play();
       hasAlerted.current = true;
@@ -56,15 +67,19 @@ export default function Stopwatch() {
     return `${minutes}:${seconds}:${centiseconds}`;
   };
 
-  return (
-    <div style={cardStyle}>
-      <h2 style={cardTitle}>⏱️ Stopwatch</h2>
-      <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-        📅 {new Date().toLocaleDateString()}
-      </p>
-      <p style={{ fontSize: "2rem", margin: "1rem 0" }}>{formatTime(time)}</p>
+  const isLandscape = orientation === "landscape";
 
-      <div>
+  return (
+    <div style={{ ...cardStyle, flexDirection: isLandscape ? "row" : "column" }}>
+      <div style={{ flex: 1, textAlign: "center" }}>
+        <h2 style={cardTitle}>⏱️ Stopwatch</h2>
+        <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
+          📅 {new Date().toLocaleDateString()}
+        </p>
+        <p style={{ fontSize: "2.5rem", margin: "1rem 0" }}>{formatTime(time)}</p>
+      </div>
+
+      <div style={{ flex: 1, textAlign: "center" }}>
         <button onClick={handleStart} style={{ ...buttonStyle, backgroundColor: "#4CAF50" }}>
           Start
         </button>
@@ -85,6 +100,9 @@ export default function Stopwatch() {
 }
 
 const cardStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   background: "rgba(255, 255, 255, 0.1)",
   padding: "1.5rem",
   borderRadius: "16px",
@@ -92,9 +110,10 @@ const cardStyle = {
   backdropFilter: "blur(8px)",
   color: "#fff",
   width: "90%",
-  maxWidth: "500px",
-  margin: "auto",
+  maxWidth: "600px",
+  margin: "2rem auto",
   textAlign: "center",
+  flexDirection: "column", // will be overridden by logic
 };
 
 const cardTitle = {
@@ -103,7 +122,7 @@ const cardTitle = {
 };
 
 const buttonStyle = {
-  padding: "0.5rem 1rem",
+  padding: "0.6rem 1.2rem",
   fontSize: "1rem",
   borderRadius: "8px",
   border: "none",
