@@ -43,30 +43,41 @@ export default function Alarm() {
   };
 
   return (
-    <div style={cardStyle}>
-      <h2 style={cardTitle}>⏰ Alarm</h2>
-      <p style={{ fontSize: "1.2rem", marginBottom: "0.5rem" }}>
-        📅 {new Date().toDateString()}
-      </p>
-      <p style={{ fontSize: "2rem", marginBottom: "1rem" }}>{currentTime}</p>
+    <div style={scrollContainer}>
+      <div style={cardStyle}>
+        <h2 style={cardTitle}>⏰ Alarm</h2>
+        <p style={{ fontSize: "1.2rem", marginBottom: "0.5rem" }}>
+          📅 {new Date().toDateString()}
+        </p>
+        <p style={{ fontSize: "2rem", marginBottom: "1rem" }}>{currentTime}</p>
 
-      <form onSubmit={handleSetAlarm}>
-        <input
-          type="time"
-          required
-          value={alarmTime}
-          onChange={(e) => setAlarmTime(e.target.value)}
-          style={inputStyle}
-        />
-        <button type="submit" style={buttonStyle}>Set Alarm</button>
-      </form>
+        <form onSubmit={handleSetAlarm}>
+          <input
+            type="time"
+            required
+            value={alarmTime}
+            onChange={(e) => setAlarmTime(e.target.value)}
+            style={inputStyle}
+          />
+          <button type="submit" style={buttonStyle}>Set Alarm</button>
+        </form>
 
-      <p style={{ marginTop: "1rem" }}>{message}</p>
-      <audio ref={alarmSoundRef} src="/alarm.mp3" preload="auto" />
+        <p style={{ marginTop: "1rem" }}>{message}</p>
+        <audio ref={alarmSoundRef} src="/alarm.mp3" preload="auto" />
+      </div>
     </div>
   );
 }
 
+// 🌐 Scroll container style
+const scrollContainer = {
+  height: "100vh",
+  overflowY: "auto",
+  backgroundColor: "#121212", // optional dark background
+  padding: "2rem 0",
+};
+
+// 💳 Card styling
 const cardStyle = {
   background: "rgba(255, 255, 255, 0.1)",
   padding: "1.5rem",
