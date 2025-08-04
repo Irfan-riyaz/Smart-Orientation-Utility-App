@@ -39,33 +39,40 @@ export default function Weather() {
   }, []);
 
   return (
-    <div style={cardStyle}>
-      <h2 style={cardTitle}>🌤️ Weather</h2>
-      <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
-        📅 {new Date().toLocaleDateString()}
-      </p>
+    <div style={scrollContainer}>
+      <div style={cardStyle}>
+        <h2 style={cardTitle}>🌤️ Weather</h2>
+        <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
+          📅 {new Date().toLocaleDateString()}
+        </p>
 
-      {error && <p>{error}</p>}
+        {error && <p>{error}</p>}
 
-      {weather ? (
-        <>
-          <img
-            src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
-            alt="weather icon"
-            style={{ width: "80px", marginBottom: "0.5rem" }}
-          />
-          <p style={{ fontSize: "2rem" }}>{weather.temp}°C</p>
-          <p style={{ textTransform: "capitalize" }}>{weather.description}</p>
-          <p style={{ fontWeight: "bold", marginTop: "0.5rem" }}>
-            📍 {weather.location}
-          </p>
-        </>
-      ) : (
-        !error && <p>Loading weather...</p>
-      )}
+        {weather ? (
+          <>
+            <img
+              src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
+              alt="weather icon"
+              style={{ width: "80px", marginBottom: "0.5rem" }}
+            />
+            <p style={{ fontSize: "2rem" }}>{weather.temp}°C</p>
+            <p style={{ textTransform: "capitalize" }}>{weather.description}</p>
+            <p style={{ fontWeight: "bold", marginTop: "0.5rem" }}>
+              📍 {weather.location}
+            </p>
+          </>
+        ) : (
+          !error && <p>Loading weather...</p>
+        )}
+      </div>
     </div>
   );
 }
+
+const scrollContainer = {
+  maxHeight: "100vh",
+  overflowY: "auto",
+};
 
 const cardStyle = {
   background: "rgba(255, 255, 255, 0.1)",
