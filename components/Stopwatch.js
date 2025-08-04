@@ -70,7 +70,14 @@ export default function Stopwatch() {
   const isLandscape = orientation === "landscape";
 
   return (
-    <div style={{ ...cardStyle, flexDirection: isLandscape ? "row" : "column" }}>
+    <div
+      style={{
+        ...cardStyle,
+        flexDirection: isLandscape ? "row" : "column",
+        overflow: "auto",          // <- Scrollbar added
+        maxHeight: "100vh",        // <- Ensure scroll triggers if needed
+      }}
+    >
       <div style={{ flex: 1, textAlign: "center" }}>
         <h2 style={cardTitle}>⏱️ Stopwatch</h2>
         <p style={{ fontSize: "1rem", marginBottom: "0.5rem" }}>
@@ -113,7 +120,7 @@ const cardStyle = {
   maxWidth: "600px",
   margin: "2rem auto",
   textAlign: "center",
-  flexDirection: "column", // will be overridden by logic
+  flexDirection: "column",
 };
 
 const cardTitle = {
