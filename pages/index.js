@@ -65,7 +65,6 @@ export default function Home() {
         body {
           margin: 0;
           padding: 0;
-          overflow: hidden;
           height: 100%;
         }
       `}</style>
@@ -81,7 +80,8 @@ export default function Home() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "flex-start",
+          overflowY: "auto", // Scrollbar enabled
         }}
       >
         <h1 style={{ fontSize: "2.6rem", marginBottom: "1rem" }}>
