@@ -1,0 +1,62 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow: hidden;
+  height: 100%;
+  background-color: #121212;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.orientation-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  padding: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #f0f0f0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #aaa;
+  margin-top: 0.5rem;
+}
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1000px;
+  padding: 2rem;
+}
+
+.tool-card {
+  background-color: #1e1e1e;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.tool-card:hover {
+  transform: scale(1.05);
+}
+
+.tool-card h2 {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+}
